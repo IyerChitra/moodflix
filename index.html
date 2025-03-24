@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moodflix - Eliminate Choice Fatigue</title>
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #181818;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #000;
+            color: #fff;
+            padding: 15px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 95%;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-left: 30px;
+            padding-right: 30px;
+        }
+
+        .logo {
+            font-family: inherit;
+            /* Inherit font from body or a specific font if set */
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #02D8E9;
+        }
+
+        .moodflix-blue {
+            color: #02D8E9;
+            font-weight: bold;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: #02D8E9;
+        }
+
+        .main-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-top: 80px;
+            flex-grow: 1;
+        }
+
+        .container {
+            background-color: #222;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            display: flex;
+            width: 90%;
+            max-width: 1200px;
+            height: 80vh;
+        }
+
+        .left-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .headline {
+            font-size: 2.5em;
+            color: #fff;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .try-now-button {
+            background-color: #02D8E9;
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .try-now-button:hover {
+            background-color: #00B0C8;
+        }
+
+        .right-section {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .movie-image-container {
+            overflow: hidden;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+            height: 200px;
+        }
+
+        .movie-image-container:hover {
+            transform: scale(1.05);
+        }
+
+        .movie-image {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+        }
+
+        #discover-section {
+            display: none;
+            padding: 40px;
+            text-align: center;
+        }
+
+        #discover-section button {
+            padding: 10px 20px;
+            margin: 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: #333;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        #discover-section button.active {
+            background-color: #02D8E9;
+            color: #000;
+        }
+
+        #discover-section button:hover {
+            background-color: #555;
+        }
+
+        #mood-selection,
+        #genre-selection {
+            display: none;
+            margin-top: 20px;
+        }
+
+        #mood-selection label,
+        #genre-selection label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #eee;
+        }
+
+        #mood-selection input[type="text"],
+        #mood-selection button,
+        #genre-selection input[type="text"],
+        #genre-selection button {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #555;
+            background-color: #333;
+            color: #fff;
+            font-size: 1em;
+        }
+
+        #mood-selection button,
+        #genre-selection button {
+            background-color: #02D8E9;
+            color: #000;
+            cursor: pointer;
+        }
+
+        #mood-selection button:hover,
+        #genre-selection button:hover {
+            background-color: #00B0C8;
+        }
+
+        #recommendations-section {
+            display: none;
+            padding: 40px;
+            text-align: center;
+        }
+
+        #recommendations-section h2 {
+            color: #fff;
+        }
+
+        #recommendations-list {
+            margin-top: 20px;
+        }
+
+        .recommendation {
+            background-color: #333;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+        }
+
+        .recommendation-image-container {
+            width: 150px;
+            height: 100px;
+            overflow: hidden;
+            border-radius: 5px;
+            margin-right: 20px;
+        }
+
+        .recommendation-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .recommendation-details {
+            flex-grow: 1;
+        }
+
+        .recommendation h3 {
+            margin-top: 0;
+            color: #02D8E9;
+        }
+
+        .recommendation p {
+            color: #ccc;
+            margin-bottom: 10px;
+        }
+
+        .recommendation a {
+            color: #02D8E9;
+            text-decoration: none;
+            margin-right: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .recommendation a:hover {
+            text-decoration: underline;
+            color: #00B0C8;
+        }
+
+        #recommendations-section button {
+            background-color: #555;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        #recommendations-section button:hover {
+            background-color: #777;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <div class="logo">Moodflix</div>
+        <nav>
+            <ul>
+                <li><a href="#" id="home-link">Home</a></li>
+                <li><a href="#" id="discover-link">Discover</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="left-section">
+                <h1 class="headline">30 minute search for a 1 hour flick?<br>Not anymore, with <span
+                        class="moodflix-blue">moodflix</span>!</h1>
+                <button class="try-now-button" onclick="showDiscoverSection()">Try Now</button>
+            </div>
+            <div class="right-section">
+                <div class="movie-image-container"><img
+                        src="https://image.tmdb.org/t/p/original/jbOSUAWMGzGL1L4EaUF8K6zYFo7.jpg" alt="Movie 1"
+                        class="movie-image"></div>
+                <div class="movie-image-container"><img
+                        src="https://www.indiewire.com/wp-content/uploads/2024/12/MCDAADI_EC013.jpg?w=1024"
+                        alt="Movie 2" class="movie-image"></div>
+                <div class="movie-image-container"><img
+                        src="https://www.indiewire.com/wp-content/uploads/2024/12/MV5BYzgwOGIwZjAtZTg0OS00ZGRkLTgxMjUtMjU2NDA2Yjc4NTc1XkEyXkFqcGc@._V1__e48245.jpg?w=750"
+                        alt="Movie 3" class="movie-image"></div>
+                <div class="movie-image-container"><img
+                        src="https://www.indiewire.com/wp-content/uploads/2024/12/MCDANOR_EC038.jpg?w=1024"
+                        alt="Movie 4" class="movie-image"></div>
+                <div class="movie-image-container"><img
+                        src="https://www.indiewire.com/wp-content/uploads/2024/12/MCDREPA_H4012.jpg?w=1024"
+                        alt="Movie 5" class="movie-image"></div>
+                <div class="movie-image-container"><img
+                        src="https://www.indiewire.com/wp-content/uploads/2024/12/MCDCHAL_MG004.jpg?w=1024"
+                        alt="Movie 6" class="movie-image"></div>
+            </div>
+        </div>
+
+        <div id="discover-section">
+            <h2>Discover movies by:</h2>
+            <button id="mood-button" class="active">Mood</button>
+            <button id="genre-button">Genre</button>
+
+            <div id="mood-selection">
+                <label for="mood">Mood:</label>
+                <input type="text" id="mood" name="mood" placeholder="e.g., Happy, Thrilled, Relaxed">
+                <label for="language">Language:</label>
+                <input type="text" id="language" name="language" placeholder="e.g., English, Spanish, Hindi">
+                <div>
+                    <button onclick="getRecommendations('mood')">Find Movies</button>
+                </div>
+            </div>
+
+            <div id="genre-selection">
+                <label for="genre-browse">Genre:</label>
+                <input type="text" id="genre-browse" name="genre-browse" placeholder="e.g., Comedy, Action, Drama">
+                <label for="language-browse">Language:</label>
+                <input type="text" id="language-browse" name="language-browse"
+                    placeholder="e.g., English, Spanish, Hindi">
+                <div>
+                    <button onclick="getRecommendations('genre')">Find Movies</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="recommendations-section">
+            <h2>Here are your personalized movie recommendations:</h2>
+            <div id="recommendations-list">
+            </div>
+            <button onclick="showLandingPage()">Go Back</button>
+        </div>
+    </div>
+
+    <script>
+        function showDiscoverSection() {
+            document.querySelector('.container').style.display = 'none';
+            document.getElementById('discover-section').style.display = 'block';
+            document.getElementById('recommendations-section').style.display = 'none';
+            // Initially show mood selection
+            document.getElementById('mood-selection').style.display = 'block';
+            document.getElementById('genre-selection').style.display = 'none';
+            document.getElementById('mood-button').classList.add('active');
+            document.getElementById('genre-button').classList.remove('active');
+        }
+
+        function showLandingPage() {
+            document.querySelector('.container').style.display = 'flex';
+            document.getElementById('discover-section').style.display = 'none';
+            document.getElementById('recommendations-section').style.display = 'none';
+        }
+
+        function getRecommendations(type) {
+            let mood = '';
+            let genre = '';
+            let language = '';
+
+            if (type === 'mood') {
+                mood = document.getElementById('mood').value;
+                language = document.getElementById('language').value;
+            } else if (type === 'genre') {
+                genre = document.getElementById('genre-browse').value;
+                language = document.getElementById('language-browse').value;
+            }
+
+            const recommendations = [
+                {
+                    "title": "The Taste of Things (2024)",
+                    "description": "A culinary drama exploring the intimate relationship between a chef and his protégé.",
+                    "trailerLink": "https://www.youtube.com/watch?v=2BtQjrT1Qks",
+                    "watchLink": "https://www.primevideo.com/detail/The-Taste-of-Things/0K4LRESATXWU8BAJC952DFGJW1",
+                    "details": "Genre: Drama, Language: English, Mood: Relaxed, Type: Movie",
+                    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkOmlxQEWSUfd78IivaHaT8HbM9GS82zhJl8kyMA0ymUf1Oka-Z7opeA4Nqr7ke0LI-BYJBQ"
+                },
+                {
+                    "title": "Perfect Days (2024)",
+                    "description": "A meditative journey following a Tokyo toilet cleaner's simple yet profound daily life.",
+                    "trailerLink": "https://www.youtube.com/watch?v=Iv8YO5BXCAQ",
+                    "watchLink": "https://www.amazon.com/Perfect-Days-K%C3%B4ji-Yakusho/dp/B0BZK6T6KR",
+                    "details": "Genre: Drama, Language: English, Mood: Relaxed, Type: Movie",
+                    "image": "https://m.media-amazon.com/images/M/MV5BNGVmODFkM2MtOTEzMy00MjFjLThjZmYtODMxZmI1MzcyNDkyXkEyXkFqcGc@._V1_.jpg"
+                },
+                {
+                    "title": "The Wild Robot (2024)",
+                    "description": "An animated series about a robot's adventures in the wilderness, discovering life and companionship.",
+                    "trailerLink": "https://www.youtube.com/watch?v=67vbA5ZJdKQ",
+                    "watchLink": "https://www.hotstar.com/in/movies/the-wild-robot/1271392372?utm_source=gwa",
+                    "details": "Genre: Drama, Language: English, Mood: Relaxed, Type: Show",
+                    "image": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcR5B79_jZ2aXEx5QG7xOYQUeBxHZd1DpeZCvw&usqp=CAU"
+                },
+                {
+                    "title": "All We Imagine As Light (2024)",
+                    "description": "A poignant tale of three women in Mumbai navigating personal and societal challenges.",
+                    "trailerLink": "https://www.youtube.com/watch?v=2mgQcpmYr_A",
+                    "watchLink": "https://www.hotstar.com/in/movies/all-we-imagine-as-light/1271380732",
+                    "details": "Genre: Drama, Language: Hindi, Mood: Relaxed, Type: Movie",
+                    "image": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQiiBd9gRauKmAgQpYGLId1ZfIeUm8bypQmdKacIEtrIG8jr3AsiHhhQGVzEAsIA0NtryHi_Q"
+                },
+                {
+                    "title": "Jaane Jaan (2023)",
+                    "description": "A mystery thriller involving a single mother entangled in a murder investigation.",
+                    "trailerLink": "https://www.youtube.com/watch?v=GHX6yT9Lxfo",
+                    "watchLink": "https://www.netflix.com/watch/81586376?source=35",
+                    "details": "Genre: Drama, Language: Hindi, Mood: Relaxed, Type: Movie",
+                    "image": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTxQtGA1z0rveDIjyUpArrjz5nR-8CO-HAMKtbjlyV6guYHIgPbpu6ovL3sZQvSUjOOarScKQ"
+                },
+                {
+                    "title": "Panchayat (2020–2023)",
+                    "description": "A comedy-drama series about an engineering graduate working in a rural village panchayat office.",
+                    "trailerLink": "https://www.youtube.com/watch?v=mojZJ7oeD_g",
+                    "watchLink": "https://www.primevideo.com/detail/Panchayat/0KAFPP1MAADAFUOA6I2WR5D4TM",
+                    "details": "Genre: Drama, Language: Hindi, Mood: Relaxed, Type: Show",
+                    "image": "https://m.media-amazon.com/images/M/MV5BYzkwZGNkYTctZDc2MS00OWM2LWI2NTUtMTM2ZGMzMTY0N2Q1XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+                },
+                {
+                    "title": "Furiosa: A Mad Max Saga (2024)",
+                    "description": "A prequel exploring the origins of Furiosa in the dystopian world of Mad Max.",
+                    "trailerLink": "https://www.youtube.com/watch?v=XJMuhwVlca4",
+                    "watchLink": "https://www.hotstar.com/in/movies/furiosa-a-mad-max-saga/1971011170?utm_source=gwa",
+                    "details": "Genre: Adventure, Language: English, Mood: Adventurous, Type: Movie",
+                    "image": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTIDRiRq4pg_FxA9rskgKkh2z4GevpSm6zejevBZEwpuOv7t6mM667elUmhsLH6693c0K0RGQ"
+                },
+                {
+                    "title": "The Order (2024)",
+                    "description": "A thriller about an FBI agent infiltrating a domestic terrorist group.",
+                    "trailerLink": "https://www.youtube.com/watch?v=frpxk8iNnJs",
+                    "watchLink": "https://www.primevideo.com/dp/amzn1.dv.gti.3e34193c-c06d-4a2b-9f4f-bbf77c6807e0?autoplay=0&ref_=atv_cf_strg_wb",
+                    "details": "Genre: Adventure, Language: English, Mood: Adventurous, Type: Movie",
+                    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4xCaJ_EtBxjNitsBe9sVXV1nIZnIlO1yTcqyV2i3SXDlJtB4geGedM5lSKItYZpBc7VOO"
+                },
+                {
+                    "title": "The 100 Season 8 (2024)",
+                    "description": "Set years after the original series, following new explorers uncovering long-buried secrets.",
+                    "trailerLink": "https://www.youtube.com/watch?v=aDrsItJ_HU4",
+                    "watchLink": "https://www.netflix.com/title/70283264",
+                    "details": "Genre: Adventure, Language: English, Mood: Adventurous, Type: Show",
+                    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT55He4Z3AYzJ3WdvMZ9unAiJ9Shyj9MLcZSw&s"
+                },
+                {
+                    "title": "Shershaah (2021)",
+                    "description": "A biographical war film depicting the life of Captain Vikram Batra during the Kargil War.",
+                    "trailerLink": "https://www.youtube.com/watch?v=Q0FTXnefVBA",
+                    "watchLink": "https://www.primevideo.com/dp/amzn1.dv.gti.42ab3f0a-f516-40b8-a5dd-c5b37f52b0ac?autoplay=0&ref_=atv_cf_strg_wb",
+                    "details": "Genre: Adventure, Language: Hindi, Mood: Adventurous, Type: Movie",
+                    "image": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcS2v2Iwmws3FO5ZtOJ9j4EyNf4CD1pmk-K3Z0pdthOoPhiogO7lYYncVIhWPP6eL9ztFltPwg"
+                },
+                {
+                    "title": "Bhuj: The Pride of India (2021)",
+                    "description": "A war action film based on the 1971 Indo-Pakistani War focusing on the Bhuj airbase.",
+                    "trailerLink": "https://www.youtube.com/watch?v=YngLZzBuzHA",
+                    "watchLink": "https://www.hotstar.com/in/movies/bhuj-the-pride-of-india/1260036201?utm_source=gwa",
+                    "details": "Genre: Adventure, Language: Hindi, Mood: Adventurous, Type: Movie",
+                    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqJ8zW6YdtzyIOHSGOiIAJ2CbcVaWD1LVUROTP3D9cytF8RK7rQvhhNpZiczN8aD9x-FDA"
+                },
+                {
+                    "title": "Special Ops (2020–2021)",
+                    "description": "An espionage thriller series following a RAW agent's pursuit of a mastermind terrorist.",
+                    "trailerLink": "https://www.youtube.com/watch?v=GF0H5DZAE2g",
+                    "watchLink": "https://www.hotstar.com/in/shows/special-ops-1-5/1260071971/aandhi/1260072422/watch",
+                    "details": "Genre: Adventure, Language: Hindi, Mood: Adventurous, Type: Show",
+                    "image": "https://upload.wikimedia.org/wikipedia/en/8/83/Special_OPS_Poster.jpeg"
+                },
+                {
+                    "title": "The Storyteller (2022)",
+                    "description": "An adaptation of Satyajit Ray's short story, exploring the relationship between a storyteller and a businessman, delving into themes of creativity and exploitation.",
+                    "trailerLink": "https://www.youtube.com/watch?v=aM8rXa15u-U",
+                    "watchLink": "https://www.hotstar.com/in/movies/the-storyteller/1971314297?utm_source=gwa",
+                    "details": "Genre: Biography, Language: English, Mood: Reflective, Type: Movie",
+                    "image": "https://m.media-amazon.com/images/M/MV5BZmRjMzNiMjctODJlMS00ZjhkLTkyOTktYTQwODdlMzE3Mzk4XkEyXkFqcGc@._V1_.jpg"
+                },
+                {
+                    "title": "All We Imagine As Light (2024)",
+                    "description": "A gripping drama following three women in Mumbai as they navigate personal and societal challenges, highlighting themes of class, gender, and friendship.",
+                    "trailerLink": "https://www.youtube.com/watch?v=WTHmvfqvOXE",
+                    "watchLink": "https://www.hotstar.com/in/movies/all-we-imagine-as-light/1271380732",
+                    "details": "Genre: Biography, Language: English, Mood: Reflective, Type: Movie",
+                    "image": "https://cdn.posteritati.com/posters/000/000/073/942/all-we-imagine-as-light-sm-web.jpg"
+                },
+                {
+                    "title": "The Romantics (2023)",
+                    "description": "A documentary series exploring the impact of Yash Chopra and Yash Raj Films on Hindi cinema, featuring interviews with prominent Bollywood figures.",
+                    "trailerLink": "https://www.youtube.com/watch?v=myG0f2RKizY",
+                    "watchLink": "https://www.netflix.com/watch/81617079?source=35",
+                    "details": "Genre: Biography, Language: English, Mood: Reflective, Type: Show",
+                    "image": "https://m.media-amazon.com/images/M/MV5BYjI1M2FjMTAtYzJjNi00NDBhLWIxNmEtOGZhNGRjOTU3YmU0XkEyXkFqcGc@._V1_.jpg"
+                },
+                {
+                    "title": "Gulmohar (2023)",
+                    "description": "A family drama centered around the Batra family as they prepare to leave their ancestral home, leading to the unraveling of hidden secrets and emotional rediscoveries.",
+                    "trailerLink": "https://www.youtube.com/watch?v=faKANTN5wvM",
+                    "watchLink": "https://www.hotstar.com/in/movies/gulmohar/1260131146?utm_source=gwa",
+                    "details": "Genre: Biography, Language: Hindi, Mood: Reflective, Type: Movie",
+                    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDZ_uVijZjG9TbKdb9fR59G0-0IXGFYSv-DA&s"
+                },
+                {
+                    "title": "Mrs. (2025)",
+                    "description": "Follows Richa, a trained dancer, as she struggles to adapt to her new role as a housewife after marriage, exploring themes of identity and societal expectations.",
+                    "trailerLink": "https://www.youtube.com/watch?v=jmhV-jRotEk",
+                    "watchLink": "https://www.zee5.com/movies/details/mrs/0-0-1z5622464",
+                    "details": "Genre: Biography, Language: Hindi, Mood: Reflective, Type: Movie",
+                    "image": "https://popcornreviewss.com/wp-content/uploads/2025/02/Mrs-2025-Comedy-Hindi-Movie-Review.jpg"
+                },
+                {
+                    "title": "Dil Bekaraar (2021)",
+                    "description": "Set in the 1980s, this series revolves around the Thakur family and their five daughters, capturing the essence of the era with its family drama and romance.",
+                    "trailerLink": "https://www.youtube.com/watch?v=B55HjSNtvgw",
+                    "watchLink": "https://www.hotstar.com/in/shows/dil-bekaraar/1260072917?utm_source=gwa",
+                    "details": "Genre: Biography, Language: Hindi, Mood: Reflective, Type: Show",
+                    "image": "https://image.tmdb.org/t/p/original/fycVDBYKG3eynGcds4TnhtMNVtm.jpg"
+                },
+                {
+                    "title": "The Fabelmans (2022)",
+                    "description": "A semi-autobiographical film directed by Steven Spielberg, depicting his early years and the formative experiences that led him to become a filmmaker.",
+                    "trailerLink": "https://www.youtube.com/watch?v=D1G2iLSzOe8",
+                    "watchLink": "https://www.sonyliv.com/movies/the-fabelmans-1000231194?utm_source=Google&utm_medium=WatchNow&utm_campaign=1000231194",
+                    "details": "Genre: Coming-of-Age, Language: English, Mood: Nostalgic, Type: Movie",
+                    "image": "https://image.tmdb.org/t/p/original/h7llKkqkkJtJrTOaDLuVeUYDQ7I.jpg"
+                },
+                {
+                    "title": "Licorice Pizza (2021)",
+                    "description": "A coming-of-age story set in the 1970s, following the relationship between a teenage actor and a young woman exploring their ambitions and feelings.",
+                    "trailerLink": "https://www.youtube.com/watch?v=o_hRNmlk80g",
+                    "watchLink": "https://www.primevideo.com/dp/amzn1.dv.gti.2a3466c6-0680-4b77-9489-adac7c386f96?autoplay=0&ref_=atv_cf_strg_wb",
+                    "details": "Genre: Coming-of-Age, Language: English, Mood: Nostalgic, Type: Movie",
+                    "image": "https://image.tmdb.org/t/p/original/7F8v5IzhgZSfyTSXpIxXE8d1u8v.jpg"
+                },
+                {
+                    "title": "Stranger Things (2016–2024)",
+                    "description": "A science fiction horror series set in the 1980s, following a group of friends as they encounter supernatural forces and government conspiracies in their small town.",
+                    "trailerLink": "https://www.youtube.com/watch?v=dienmI2Mv08&t=7s",
+                    "watchLink": "https://www.netflix.com/in/title/80057281",
+                    "details": "Genre: Coming-of-Age, Language: English, Mood: Nostalgic, Type: Show",
+                    "image": "https://static1.colliderimages.com/wordpress/wp-content/uploads/sharedimages/2024/04/stranger-things-season-4-poster.jpeg?q=49&fit=crop&w=480&dpr=2"
+                },
+                {
+                    "title": "Dil Chahta Hai (2001)",
+                    "description": "A coming-of-age film that follows three friends as they navigate love, life, and friendship, capturing the essence of urban youth in early 2000s India.",
+                    "trailerLink": "https://www.youtube.com/watch?v=m13b25V0B10",
+                    "watchLink": "https://www.netflix.com/in/title/60021525?source=35",
+                    "details": "Genre: Coming-of-Age, Language: Hindi, Mood: Nostalgic, Type: Movie",
+                    "image": "https://upload.wikimedia.org/wikipedia/en/thumb/d/db/Dil_Chahta_Hai.jpg/220px-Dil_Chahta_Hai.jpg"
+                },
+                {
+                    "title": "Rang De Basanti (2006)",
+                    "description": "A drama that intertwines the lives of contemporary Indian youth with the stories of freedom fighters from India's past, inspiring a sense of patriotism and reflection.",
+                    "trailerLink": "https://www.youtube.com/watch?v=l-BTOTtcGmk",
+                    "watchLink": "https://www.netflix.com/in/title/70047320?source=35",
+                    "details": "Genre: Coming-of-Age, Language: Hindi, Mood: Nostalgic, Type: Movie",
+                    "image": "http://www.impawards.com/intl/india/2006/posters/rang_de_basanti.jpg"
+                },
+                {
+                    "title": "The Romantics (2023)",
+                    "description": "A documentary series exploring the impact of Bollywood’s golden era through the lens of Yash Raj Films and its cultural legacy.",
+                    "trailerLink": "https://www.youtube.com/watch?v=myG0f2RKizY",
+                    "watchLink": "https://www.netflix.com/in/title/81617079",
+                    "details": "Genre: Coming-of-Age, Language: Hindi, Mood: Nostalgic, Type: Show",
+                    "image": "https://img.indiaforums.com/movie/350x525/6/956-the-romantics.jpg?c=8pAF53"
+                }
+
+                // You can continue adding the rest of the entries following the same format
+            ];
+
+
+            const filteredRecommendations = recommendations.filter(movie => {
+                const detailsLower = movie.details.toLowerCase();
+                let moodMatch = true;
+                let genreMatch = true;
+                let languageMatch = true;
+
+                if (type === 'mood') {
+                    if (mood && !detailsLower.includes(`mood: ${mood.toLowerCase()}`)) {
+                        moodMatch = false;
+                    }
+                    if (language && !detailsLower.includes(`language: ${language.toLowerCase()}`)) {
+                        languageMatch = false;
+                    }
+                    return moodMatch && languageMatch;
+                } else if (type === 'genre') {
+                    if (genre && !detailsLower.includes(`genre: ${genre.toLowerCase()}`)) {
+                        genreMatch = false;
+                    }
+                    if (language && !detailsLower.includes(`language: ${language.toLowerCase()}`)) {
+                        languageMatch = false;
+                    }
+                    return genreMatch && languageMatch;
+                }
+                return false; // Should not reach here
+            });
+
+            displayRecommendations(filteredRecommendations);
+        }
+
+        function displayRecommendations(movies) {
+            const recommendationsList = document.getElementById('recommendations-list');
+            recommendationsList.innerHTML = '';
+
+            movies.forEach(movie => {
+                const recommendationDiv = document.createElement('div');
+                recommendationDiv.classList.add('recommendation');
+                recommendationDiv.innerHTML = `
+                    <div class="recommendation-image-container">
+                        <img src="${movie.image}" alt="${movie.title}" class="recommendation-image">
+                    </div>
+                    <div class="recommendation-details">
+                        <h3>${movie.title}</h3>
+                        <p>${movie.description}</p>
+                        <p>${movie.details}</p>
+                        <p>
+                            <a href="${movie.trailerLink}" target="_blank">Watch Trailer</a> |
+                            <a href="${movie.watchLink}" target="_blank">Watch Now</a>
+                        </p>
+                    </div>
+                `;
+                recommendationsList.appendChild(recommendationDiv);
+            });
+
+            document.getElementById('discover-section').style.display = 'none';
+            document.getElementById('recommendations-section').style.display = 'block';
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const homeLink = document.getElementById('home-link');
+            const discoverLink = document.getElementById('discover-link');
+            const moodButton = document.getElementById('mood-button');
+            const genreButton = document.getElementById('genre-button');
+
+            if (homeLink) {
+                homeLink.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    showLandingPage();
+                });
+            }
+
+            if (discoverLink) {
+                discoverLink.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    showDiscoverSection();
+                });
+            }
+
+            if (moodButton) {
+                moodButton.addEventListener('click', function () {
+                    document.getElementById('mood-selection').style.display = 'block';
+                    document.getElementById('genre-selection').style.display = 'none';
+                    moodButton.classList.add('active');
+                    genreButton.classList.remove('active');
+                });
+            }
+
+            if (genreButton) {
+                genreButton.addEventListener('click', function () {
+                    document.getElementById('genre-selection').style.display = 'block';
+                    document.getElementById('mood-selection').style.display = 'none';
+                    genreButton.classList.add('active');
+                    moodButton.classList.remove('active');
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
