@@ -179,6 +179,21 @@
             margin-top: 20px;
         }
 
+        #mood-selection select,
+        #genre-selection select {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #555;
+            background-color: #333;
+            color: #fff;
+            font-size: 1em;
+            width: 100%;
+            /* Make them take full width if desired */
+            box-sizing: border-box;
+            /* Ensure padding and border are included in the width */
+        }
+
         #mood-selection label,
         #genre-selection label {
             display: block;
@@ -310,7 +325,7 @@
     <div class="main-content">
         <div class="container">
             <div class="left-section">
-                <h1 class="headline">30 minute search for a 1 hour flick?<br>Not anymore, with <span
+                <h1 class="headline">Just type your mood or preferred genre for recommendations from <span
                         class="moodflix-blue">moodflix</span>!</h1>
                 <button class="try-now-button" onclick="showDiscoverSection()">Try Now</button>
             </div>
@@ -341,7 +356,7 @@
             <button id="mood-button" class="active">Mood</button>
             <button id="genre-button">Genre</button>
 
-            <div id="mood-selection">
+            <!--<div id="mood-selection">
                 <label for="mood">Mood:</label>
                 <input type="text" id="mood" name="mood" placeholder="e.g., Happy, Thrilled, Relaxed">
                 <label for="language">Language:</label>
@@ -349,14 +364,51 @@
                 <div>
                     <button onclick="getRecommendations('mood')">Find Movies</button>
                 </div>
+            </div>-->
+            <div id="mood-selection">
+                <label for="mood">Mood:</label>
+                <select id="mood" name="mood">
+                    <option value="">Select Mood</option>
+                    <option value="relaxed">Relaxed</option>
+                    <option value="adventurous">Adventurous</option>
+                    <option value="reflective">Reflective</option>
+                    <option value="nostalgic">Nostalgic</option>
+                </select>
+                <label for="language">Language:</label>
+                <select id="language" name="language">
+                    <option value="">Select Language</option>
+                    <option value="english">English</option>
+                    <option value="hindi">Hindi</option>
+                </select>
+                <div>
+                    <button onclick="getRecommendations('mood')">Find Movies</button>
+                </div>
             </div>
-
-            <div id="genre-selection">
+            <!--<div id="genre-selection">
                 <label for="genre-browse">Genre:</label>
                 <input type="text" id="genre-browse" name="genre-browse" placeholder="e.g., Comedy, Action, Drama">
                 <label for="language-browse">Language:</label>
                 <input type="text" id="language-browse" name="language-browse"
                     placeholder="e.g., English, Spanish, Hindi">
+                <div>
+                    <button onclick="getRecommendations('genre')">Find Movies</button>
+                </div>
+            </div>-->
+            <div id="genre-selection">
+                <label for="genre-browse">Genre:</label>
+                <select id="genre-browse" name="genre-browse">
+                    <option value="">Select Genre</option>
+                    <option value="biography">Biography</option>
+                    <option value="drama">Drama</option>
+                    <option value="coming-of-age">Coming-of-Age</option>
+                    <option value="adventure">Adventure</option>
+                </select>
+                <label for="language-browse">Language:</label>
+                <select id="language-browse" name="language-browse">
+                    <option value="">Select Language</option>
+                    <option value="english">English</option>
+                    <option value="hindi">Hindi</option>
+                </select>
                 <div>
                     <button onclick="getRecommendations('genre')">Find Movies</button>
                 </div>
